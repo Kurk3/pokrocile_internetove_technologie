@@ -1,8 +1,8 @@
 <?php
-$host = '127.0.0.1'; // or 'localhost'
+$host = '127.0.0.1';
 $db   = 'ecom_db';
-$user = 'root'; // MAMP default is usually 'root'
-$pass = 'root'; // MAMP default is usually 'root' or an empty string
+$user = 'root';
+$pass = 'root';
 $charset = 'utf8mb4';
 
 $options = [

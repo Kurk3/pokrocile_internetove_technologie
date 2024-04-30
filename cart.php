@@ -21,7 +21,16 @@ $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    die('Connection failed: ' . $e->getMessage());
+}
+
+$stmt = $pdo->query('SELECT id, name, description, price FROM product');
+$products = $stmt->fetchAll();
+
+$cartItemCount = 0;
+if (isset($_COOKIE['shopping_cart'])) {
+    $cartItems = json_decode($_COOKIE['shopping_cart'], true);
+    $cartItemCount = count($cartItems);
 }
 
 // If a product ID is posted, add it to the cart
