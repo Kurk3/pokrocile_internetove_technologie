@@ -1,4 +1,4 @@
 PHP Web 
 
 - vytvorenie uzivatela na prihlasenie page
-- users_management.php
+- user_management.php
