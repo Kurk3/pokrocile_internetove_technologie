@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Redirect to login page if not logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: login.php');
     exit;
@@ -27,22 +28,29 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-$action = isset($_POST['action']) ? $_POST['action'] : '';
+// Function to sanitize data
+function sanitize_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+$action = isset($_POST['action']) ? sanitize_input($_POST['action']) : '';
 $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
 $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
 $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-if (!empty($action)) {
+// Verify inputs are not empty for critical actions
+if (!empty($action) && !empty($name) && !empty($description) && $price !== false) {
     switch ($action) {
         case 'add':
-            if ($name && $description && $price) {
-                $stmt = $pdo->prepare("INSERT INTO product (name, description, price) VALUES (?, ?, ?)");
-                $stmt->execute([$name, $description, $price]);
-            }
+            $stmt = $pdo->prepare("INSERT INTO product (name, description, price) VALUES (?, ?, ?)");
+            $stmt->execute([$name, $description, $price]);
             break;
         case 'edit':
-            if ($id && $name && $description && $price) {
+            if ($id) {
                 $stmt = $pdo->prepare("UPDATE product SET name = ?, description = ?, price = ? WHERE id = ?");
                 $stmt->execute([$name, $description, $price, $id]);
             }
@@ -132,7 +140,7 @@ $products = $stmt->fetchAll();
             </div>
             <div>
                 <label for="productPrice" class="block text-sm font-medium text-gray-700">Price:</label>
-                <input type="number" name="price" id="productPrice" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                <input type of "number" name="price" id="productPrice" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
             <div>
                 <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit Product</button>
@@ -148,6 +156,6 @@ $products = $stmt->fetchAll();
         document.getElementById('productDescription').value = product.description;
         document.getElementById('productPrice').value = product.price;
     }
-</script>
+    </script>
 </body>
-</html>?>
+</html>

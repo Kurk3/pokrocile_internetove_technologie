@@ -20,29 +20,34 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
+$userAction = filter_input(INPUT_POST, 'userAction', FILTER_SANITIZE_STRING);
+$userId = filter_input(INPUT_POST, 'userId', FILTER_SANITIZE_NUMBER_INT);
+$userName = filter_input(INPUT_POST, 'userName', FILTER_SANITIZE_STRING);
+$userEmail = filter_input(INPUT_POST, 'userEmail', FILTER_VALIDATE_EMAIL);
+$userPassword = $_POST['userPassword'] ? hash('sha512', $_POST['userPassword']) : null;
 
-
-$userAction = isset($_POST['userAction']) ? $_POST['userAction'] : '';
-$userId = isset($_POST['userId']) ? $_POST['userId'] : '';
-$userName = isset($_POST['userName']) ? $_POST['userName'] : '';
-$userEmail = isset($_POST['userEmail']) ? $_POST['userEmail'] : '';
-$userPassword = isset($_POST['userPassword']) ? $_POST['userPassword'] : '';
-
-if ($userAction == 'addUser') {
-    $hashedPassword = hash('sha512', $userPassword);
-    $stmt = $pdo->prepare("INSERT INTO user (name, email, password_hash) VALUES (?, ?, ?)");
-    $stmt->execute([$userName, $userEmail, $hashedPassword]);
-} elseif ($userAction == 'editUser' && $userId) {
-    $hashedPassword = hash('sha512', $userPassword);
-    $stmt = $pdo->prepare("UPDATE user SET name = ?, email = ?, password_hash = ? WHERE id = ?");
-    $stmt->execute([$userName, $userEmail, $hashedPassword, $userId]);
-} elseif ($userAction == 'deleteUser' && $userId) {
-    $stmt = $pdo->prepare("DELETE FROM user WHERE id = ?");
-    $stmt->execute([$userId]);
+switch ($userAction) {
+    case 'addUser':
+        if ($userName && $userEmail && $userPassword) {
+            $stmt = $pdo->prepare("INSERT INTO user (name, email, password_hash) VALUES (?, ?, ?)");
+            $stmt->execute([$userName, $userEmail, $userPassword]);
+        }
+        break;
+    case 'editUser':
+        if ($userId && $userName && $userEmail && $userPassword) {
+            $stmt = $pdo->prepare("UPDATE user SET name = ?, email = ?, password_hash = ? WHERE id = ?");
+            $stmt->execute([$userName, $userEmail, $userPassword, $userId]);
+        }
+        break;
+    case 'deleteUser':
+        if ($userId) {
+            $stmt = $pdo->prepare("DELETE FROM user WHERE id = ?");
+            $stmt->execute([$userId]);
+        }
+        break;
 }
 
-$stmt = $pdo->query("SELECT id, name, email FROM user");
-$users = $stmt->fetchAll();
+$users = $pdo->query("SELECT id, name, email FROM user")->fetchAll();
 
 ?>
 
@@ -113,7 +118,7 @@ $users = $stmt->fetchAll();
         </div>
         <div>
             <label for="userEmail" class="block text-sm font-medium text-gray-700">Email:</label>
-            <input type="email" name="userEmail" id="userEmail" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-left">
+            <input type of="email" name="userEmail" id="userEmail" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-left">
         </div>
         <div>
             <label for="userPassword" class="block text-sm font-medium text-gray-700">Password:</label>
@@ -136,8 +141,4 @@ $users = $stmt->fetchAll();
 
 </script>
 </body>
-</html>?>
-
-
-
-
+</html>
