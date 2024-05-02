@@ -78,6 +78,29 @@ $products = $stmt->fetchAll();
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
+    <nav class="bg-white shadow">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="relative flex items-center justify-between h-16">
+                <div class="flex items-center px-2 lg:px-0">
+                    <div class="hidden lg:block lg:ml-6">
+                        <div class="flex space-x-4">
+                            <a href="index.php" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                            <a href="product_management.php" class="text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Product Management</a>
+                            <a href="user_management.php" class="text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">User Management</a>
+                            <a href="cart.php" class="text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Cart (<?php echo $cartItemCount; ?>)</a>
+                        </div>
+                    </div>
+                </div>
+                <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']): ?>
+                <div class="lg:hidden">
+                    <button type="button" class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                    </button>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </nav>
     <div class="px-4 sm:px-6 lg:px-8">
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">

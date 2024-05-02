@@ -1,4 +1,3 @@
-### Basic PHP and TailwindCSS 
+PHP Web 
 
-#### index.php 
-- Base file
+- vytvorenie uzivatela na prihlasenie v 

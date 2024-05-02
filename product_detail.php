@@ -45,59 +45,45 @@ $priceWithVAT = $product['price'] * 1.20;
 <head>
     <meta charset="UTF-8">
     <title><?php echo htmlspecialchars($product['name']); ?></title>
-    <!-- Add your CSS links here -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-<div class="bg-white">
-    <div class="pb-16 pt-6 sm:pb-24">
-        <div class="mx-auto mt-8 max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <div class="lg:grid lg:auto-rows-min lg:grid-cols-12 lg:gap-x-8">
-                <div class="lg:col-span-5 lg:col-start-8">
-                    <div class="flex justify-between">
-                        <h1 class="text-xl font-medium text-gray-900"><?php echo htmlspecialchars($product['name']); ?></h1>
-                        <p class="text-xl font-medium text-gray-900">$<?php echo htmlspecialchars(number_format($priceWithVAT, 2)); ?></p>
-                    </div>
-                </div>
-
-                <div class="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
-                    <h2 class="sr-only">Images</h2>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
-                        <img src="insert_image_here.png"  class="lg:col-span-2 lg:row-span-2 rounded-lg">
-                    </div>
-                </div>
-
-                <div class="mt-8 lg:col-span-5">
-                    <form action="cart.php" method="POST">
-                        <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                        <button type="submit"  class="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add to card</button>
-                    </form>
-
-                    <div class="mt-10">
-                        <h2 class="text-sm font-medium text-gray-900">Description</h2>
-
-                        <div class="prose prose-sm mt-4 text-gray-500">
-                            <p><?php echo htmlspecialchars($product['description']); ?></p>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="relative flex items-center justify-between h-16">
+                <div class="flex items-center px-2 lg:px-0">
+                    <div class="hidden lg:block lg:ml-6">
+                        <div class="flex space-x-4">
+                            <a href="index.php" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                            <a href="product_management.php" class="text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Product Management</a>
+                            <a href="user_management.php" class="text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">User Management</a>
+                            <a href="cart.php" class="text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Cart (<?php echo $cartItemCount; ?>)</a>
                         </div>
                     </div>
                 </div>
+                <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']): ?>
+                <div class="lg:hidden">
+                    <button type="button" class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                    </button>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
-    </div>
-</div>
-
-
-<div class="product-detail">
-    <h1><?php echo htmlspecialchars($product['name']); ?></h1>
+    </nav>
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-xl font-bold"><?php echo htmlspecialchars($product['name']); ?></h1>
     <p><?php echo htmlspecialchars($product['description']); ?></p>
-    <p>Price: <?php echo htmlspecialchars(number_format($product['price'], 2)); ?> (Excl. VAT)</p>
-    <p>Price with VAT: <?php echo htmlspecialchars(number_format($priceWithVAT, 2)); ?></p>
+    <p>Price: $<?php echo htmlspecialchars(number_format($product['price'], 2)); ?></p>
+    <p>Price with VAT: $<?php echo htmlspecialchars(number_format($priceWithVAT, 2)); ?></p>
+
+    <!-- Form for adding product to cart -->
     <form action="cart.php" method="POST">
         <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-        <input type="submit" value="Add to Cart">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Add to Cart
+        </button>
     </form>
 </div>
-<script src="https://cdn.tailwindcss.com"></script>
-
 </body>
 </html>
